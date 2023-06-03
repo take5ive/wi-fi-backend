@@ -24,7 +24,6 @@ export class MakeDataService {
       USDC_WBTC_Pair: '0x45122844F2DB17392A3b88f9b31b65b56B784a3b',
       USDT_WBTC_Pair: '0xf674330051b3fcD68645B71ef8e5367511A0897F',
       WETH_WBTC_Pair: '0xCe893024bef9Cf7CF8353d558a64Cb0EFAA90706',
-      UniswapV2Funnel: '0xC55C0DA69F0b94916fbBe918F3984F75052198a5',
       dex: 'Uniswap V2',
     },
     chiado: {
