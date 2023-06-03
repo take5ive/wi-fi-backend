@@ -104,3 +104,103 @@ model Status {
 
   @@unique([timestamp])
 }
+
+model Dex_ {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  chain_Id Int
+  chain_   Chain_  @relation(fields: [chain_Id], references: [chain_Id])
+  pair_    Pair_[]
+
+  @@unique([name])
+}
+
+model Chain_ {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  chain_Id      Int
+  name          String
+  token_        Token_[]
+  Dex_          Dex_[]
+  TokenSnapshot TokenSnapshot[]
+  Pair_Snapshot Pair_Snapshot[]
+  Pair_         Pair_[]
+
+  @@unique([chain_Id])
+}
+
+model Token_ {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  address       String
+  symbol        String
+  decimals_     Int
+  chain_Id      Int
+  chain_        Chain_          @relation(fields: [chain_Id], references: [chain_Id])
+  pair_0        Pair_[]         @relation("pair__token__0")
+  pair_1        Pair_[]         @relation("pair__token__1")
+  TokenSnapshot TokenSnapshot[]
+
+  @@unique([symbol])
+}
+
+model Pair_ {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  address        String
+  chain_Id       Int
+  chain_         Chain_  @relation(fields: [chain_Id], references: [chain_Id])
+  token_0Symbol  String
+  token_1Symbol  String
+  token_0        Token_  @relation("pair__token__0", fields: [token_0Symbol], references: [symbol])
+  token_1        Token_  @relation("pair__token__1", fields: [token_1Symbol], references: [symbol])
+  dailyVolumeUSD Float
+  reserveUSD     Float
+  timestamp      Int
+  blockNumber    Int
+  apr            Float
+  Dex_           Dex_?   @relation(fields: [dex_Id], references: [id])
+  dex_Id         String? @db.ObjectId
+}
+
+model Pair_Snapshot {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  chain_Id       Int
+  chain_         Chain_ @relation(fields: [chain_Id], references: [chain_Id])
+  address        String
+  token_0Symbol  String
+  token_1Symbol  String
+  timestamp      Int
+  blockNumber    Int
+  reserveUSD     Float
+  dailyVolumeUSD Float
+  apr            Float
+}
+
+model Status_ {
+  id                    String @id @default(auto()) @map("_id") @db.ObjectId
+  timestamp             Int
+  blockNumber_uniswap   Int
+  timestamp_pancakeswap Int
+  timestamp_uniswap     Int
+  timestamp_bifswap     Int
+  timestamp_quickswap   Int
+  token_Timestamp       Int
+  status_               Int
+
+  @@unique([status_])
+}
+
+model TokenSnapshot {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  chain_Id Int
+  chain_   Chain_ @relation(fields: [chain_Id], references: [chain_Id])
+
+  address String
+  symbol  String
+  token_  Token_ @relation(fields: [symbol], references: [symbol])
+
+  timestamp      Int
+  priceUSD       Float
+  usd_market_cap Float
+  dailyVolumeUSD Float
+  daily_change   Float
+}

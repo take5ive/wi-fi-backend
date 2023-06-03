@@ -12,20 +12,6 @@ export class MakeDataService {
   constructor(private readonly prisma: PrismaService) {}
 
   private readonly x = {
-    baobab: {
-      chainId: 1001,
-      USDC_6: '0x597653951027c042958e60007d9044AF1B753f5F',
-      USDT_6: '0x2e878772e49516FD5Ff4A848ec410db71ad1DcE6',
-      WBTC_18: '0x5281278F9066223632915F6cA846E26abE2EbB2A',
-      WETH_18: '0x15bb48F04AE662AF87DEb5efbe266593Cba99255',
-      USDC_WETH_Pair: '0x9297b4c9A3679abC63C0C7a6Da60E425fBe51dCd',
-      USDT_WETH_Pair: '0x1d243895cB0E739A9353dE10397466Bcd04130C8',
-      USDC_USDT_Pair: '0xA39EDB1B9e42d3E03819Afc89B351466d9c1D93a',
-      USDC_WBTC_Pair: '0x45122844F2DB17392A3b88f9b31b65b56B784a3b',
-      USDT_WBTC_Pair: '0xf674330051b3fcD68645B71ef8e5367511A0897F',
-      WETH_WBTC_Pair: '0xCe893024bef9Cf7CF8353d558a64Cb0EFAA90706',
-      dex: 'Uniswap V2',
-    },
     chiado: {
       chainId: 10200,
       USDC_6: '0xAF7552931152170Bf3f1585dd97075B4A47dbd71',
