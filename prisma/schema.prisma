@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  address String
+
+  @@unique([address])
+}
+
+model Token {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  address  String
+  symbol   String
+  name     String
+  decimals Int
+
+  chainId Int
+  chain   Chain @relation(fields: [chainId], references: [chainId])
+
+  pair0 Pair[] @relation("pair_token_0")
+  pair1 Pair[] @relation("pair_token_1")
+
+  @@unique([address, chainId])
+}
+
+model Chain {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  chainId Int
+  name    String
+
+  tokens       Token[]
+  pairs        Pair[]
+  pairSnapshot PairSnapshot[]
+
+  @@unique([chainId])
+}
+
+model Pair {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  address String
+
+  token0Symbol String
+  token1Symbol String
+
+  token0Id String
+  token1Id String
+  token0   Token  @relation("pair_token_0", fields: [token0Id, chainId], references: [address, chainId])
+  token1   Token  @relation("pair_token_1", fields: [token1Id, chainId], references: [address, chainId])
+
+  chainId Int
+  chain   Chain @relation(fields: [chainId], references: [chainId])
+
+  dexName      String
+  dex          Dex            @relation(fields: [dexName], references: [name])
+  pairSnapshot PairSnapshot[]
+
+  @@unique([address, chainId])
+}
+
+model PairSnapshot {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  chainId Int
+  chain   Chain @relation(fields: [chainId], references: [chainId])
+
+  token0Symbol String
+  token1Symbol String
+
+  address String
+  pair    Pair   @relation(fields: [address, chainId], references: [address, chainId])
+
+  snapshotTimestamp Int
+
+  reserveUSD Float
+  volumeUSD  Float
+  apr        Float
+  apy        Float
+
+  @@index([snapshotTimestamp])
+}
+
+model Dex {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  pair Pair[]
+
+  @@unique([name])
+}
+
+model Status {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  timestamp Int
+
+  @@unique([timestamp])
+}
